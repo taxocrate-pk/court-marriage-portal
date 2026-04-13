@@ -1,3 +1,4 @@
+"use client" // Agar ye nahi hai to sabse upar likh dein
 import Link from 'next/link'
 import { Scale, Phone, Mail, MapPin } from 'lucide-react'
 

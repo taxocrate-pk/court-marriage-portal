@@ -1,3 +1,4 @@
+"use client" // Agar ye nahi hai to sabse upar likh dein
 import { Phone, FileText, Scale, Shield } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 

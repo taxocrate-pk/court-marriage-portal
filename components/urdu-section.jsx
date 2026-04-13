@@ -1,3 +1,4 @@
+"use client" // Agar ye nahi hai to sabse upar likh dein
 import { Scale, Globe, FileCheck } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 
