@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Menu, X, Phone, Scale } from 'lucide-react'
+import { Menu, X, Phone, Scale, Moon, Sun } from 'lucide-react' // Moon aur Sun icons add kiye
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { useTheme } from 'next-themes' // useTheme hook import kiya
 
 const navLinks = [
   { href: '#services', label: 'Services' },
@@ -17,14 +18,20 @@ const navLinks = [
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [mounted, setMounted] = useState(false) // Hydration error se bachne ke liye
+  const { theme, setTheme } = useTheme()
 
   useEffect(() => {
+    setMounted(true)
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50)
     }
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+
+  // Agar component mount nahi hua toh icons show nahi karenge (Hydration fix)
+  if (!mounted) return null
 
   return (
     <header
@@ -41,10 +48,9 @@ export function Header() {
           <Link 
             href="/" 
             className="flex items-center gap-3 group"
-            aria-label="Court Marriage Pakistan - Home"
           >
             <div className="w-10 h-10 rounded-lg bg-gold/20 border border-gold/30 flex items-center justify-center group-hover:bg-gold/30 transition-colors">
-              <Scale className="w-5 h-5 text-gold" aria-hidden="true" />
+              <Scale className="w-5 h-5 text-gold" />
             </div>
             <div className="hidden sm:block">
               <div className="text-lg font-bold text-foreground">Court-Marriage</div>
@@ -65,33 +71,38 @@ export function Header() {
             ))}
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            {/* Theme Toggle Button (Desktop) */}
             <Button
-              asChild
-              className="bg-gold hover:bg-gold-dark text-midnight font-semibold rounded-lg"
-              aria-label="Call now to speak with a legal expert"
+              variant="ghost"
+              size="icon"
+              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+              className="text-foreground hover:bg-gold/10"
             >
-              <a href="tel:+923332317861">
-                <Phone className="w-4 h-4 mr-2" aria-hidden="true" />
-                +92 333 2317861
-              </a>
+              {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </Button>
-          </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg text-foreground hover:bg-gold/10 transition-colors"
-            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={isMobileMenuOpen}
-          >
-            {isMobileMenuOpen ? (
-              <X className="w-6 h-6" aria-hidden="true" />
-            ) : (
-              <Menu className="w-6 h-6" aria-hidden="true" />
-            )}
-          </button>
+            {/* CTA Button */}
+            <div className="hidden md:flex items-center gap-4">
+              <Button
+                asChild
+                className="bg-gold hover:bg-gold-dark text-midnight font-semibold rounded-lg"
+              >
+                <a href="tel:+923332317861">
+                  <Phone className="w-4 h-4 mr-2" />
+                  +92 333 2317861
+                </a>
+              </Button>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 rounded-lg text-foreground hover:bg-gold/10"
+            >
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu */}
@@ -103,7 +114,7 @@ export function Header() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="px-4 py-3 text-base font-medium text-foreground/90 hover:text-gold hover:bg-gold/5 rounded-lg transition-colors"
+                  className="px-4 py-3 text-base font-medium text-foreground/90 hover:text-gold hover:bg-gold/5 rounded-lg"
                 >
                   {link.label}
                 </Link>
@@ -112,10 +123,9 @@ export function Header() {
               <Button
                 asChild
                 className="bg-gold hover:bg-gold-dark text-midnight font-semibold w-full"
-                aria-label="Call now to speak with a legal expert"
               >
                 <a href="tel:+923332317861">
-                  <Phone className="w-4 h-4 mr-2" aria-hidden="true" />
+                  <Phone className="w-4 h-4 mr-2" />
                   +92 333 2317861
                 </a>
               </Button>
